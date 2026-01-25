@@ -6,7 +6,7 @@ import BackButton from '@/components/BackButton'
 import PageViewer from '@/components/PageViewer'
 import PaymentModal from '@/components/PaymentModal'
 import LoadingAnimation from '@/components/LoadingAnimation'
-import { getOrderPages, getOrderStatus, generateFullBook, OrderPage, Order } from '@/lib/api'
+import { getOrderPages, getOrderStatus, generateFullBook, fetchBook, OrderPage, Order, Book } from '@/lib/api'
 
 export default function PreviewPage() {
   const params = useParams()
@@ -32,11 +32,13 @@ export default function PreviewPage() {
 
   const [pages, setPages] = useState<OrderPage[]>([])
   const [order, setOrder] = useState<Order | null>(null)
+  const [book, setBook] = useState<Book | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [generatingBook, setGeneratingBook] = useState(false)
   const [generationProgress, setGenerationProgress] = useState(0)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   useEffect(() => {
     loadPreview()
@@ -48,7 +50,7 @@ export default function PreviewPage() {
       
       console.log('[PreviewPage] Loading preview for order:', orderId)
       
-      // Fetch pages and status
+      // Fetch pages and status first
       const [pagesResponse, orderStatus] = await Promise.all([
         getOrderPages(orderId),
         getOrderStatus(orderId)
@@ -71,7 +73,50 @@ export default function PreviewPage() {
       
       console.log('[PreviewPage] Extracted pages array:', pagesArray)
       
-      setPages(pagesArray)
+      // Fetch book data to get template images for locked pages
+      let bookData: Book | null = null
+      if (orderStatus.bookCode) {
+        try {
+          bookData = await fetchBook(orderStatus.bookCode)
+          console.log('[PreviewPage] Book data:', bookData)
+          setBook(bookData)
+        } catch (bookErr) {
+          console.warn('[PreviewPage] Could not fetch book data:', bookErr)
+        }
+      }
+      
+      // Merge personalized pages with template placeholders
+      const totalPages = orderStatus.progress?.totalPages || 4
+      const viewerPages: OrderPage[] = []
+      
+      for (let i = 0; i < totalPages; i++) {
+        const existingPage = pagesArray.find(p => p.pageNumber === i)
+        
+        if (existingPage) {
+          // We have the personalized page
+          viewerPages.push(existingPage)
+        } else if (bookData?.template_data?.pages?.[i]?.template_image_url) {
+          // Use template image for locked page
+          viewerPages.push({
+            pageNumber: i,
+            imageUrl: bookData.template_data.pages[i].template_image_url,
+            createdAt: null,
+            isPreview: false  // Mark as locked
+          })
+        } else {
+          // No template available, use placeholder
+          viewerPages.push({
+            pageNumber: i,
+            imageUrl: '',
+            createdAt: null,
+            isPreview: false
+          })
+        }
+      }
+      
+      console.log('[PreviewPage] Viewer pages with templates:', viewerPages)
+      
+      setPages(viewerPages)
       setOrder(orderStatus)
     } catch (err) {
       console.error('[PreviewPage] Error:', err)
@@ -85,70 +130,84 @@ export default function PreviewPage() {
     try {
       setGeneratingBook(true)
       setGenerationProgress(0)
+      setShowPaymentModal(false)
 
-      // Start full book generation
+      console.log('[PreviewPage] Starting full book generation...')
+
+      // Start generation (generation happens in background)
       await generateFullBook(orderId)
 
-      // Poll for progress
-      const pollInterval = setInterval(async () => {
+      // Poll for progress (faster interval) with timeout protection
+      let pollCount = 0
+      const maxPolls = 60 // 60 seconds max
+
+      const pollOnce = async (pollInterval: ReturnType<typeof setInterval>) => {
         try {
+          pollCount++
+
           const status = await getOrderStatus(orderId)
-          
-          console.log('[PreviewPage] Polling status:', status)
-          console.log('[PreviewPage] Progress:', status.progress)
-          
-          // CORRECT: Access nested progress object
+          console.log('[PreviewPage] Poll', pollCount, 'Status:', status.progress)
+
           const currentPages = status.progress?.pagesGenerated || 0
           const totalPages = status.progress?.totalPages || 1
-          const progress = (currentPages / totalPages) * 100
-          
-          console.log('[PreviewPage] Progress calculation:', currentPages, '/', totalPages, '=', progress + '%')
-          setGenerationProgress(Math.round(progress))
+          const progress = Math.round((currentPages / totalPages) * 100)
 
-          // CORRECT: Check if complete using nested properties OR status flag
+          setGenerationProgress(progress)
+
+          // Check if complete
           if (status.bookComplete || currentPages >= totalPages) {
-            console.log('[PreviewPage] Book generation complete! Fetching all pages...')
+            console.log('[PreviewPage] ✅ Generation complete!')
             clearInterval(pollInterval)
-            
-            // Refetch ALL pages (including the newly generated one)
+
+            // Fetch all pages
             const allPagesResponse = await getOrderPages(orderId)
-            console.log('[PreviewPage] All pages response after completion:', allPagesResponse)
-            
             let allPagesArray: OrderPage[] = []
             if (Array.isArray(allPagesResponse)) {
               allPagesArray = allPagesResponse
             } else if (allPagesResponse && typeof allPagesResponse === 'object') {
-              const resp = allPagesResponse as any
-              allPagesArray = resp.pages || resp.data || []
+              allPagesArray = (allPagesResponse as any).pages || (allPagesResponse as any).data || []
             }
-            
-            console.log('[PreviewPage] Setting pages to:', allPagesArray.length, 'pages')
+
             setPages(allPagesArray)
-            setOrder(status)  // Update order state too
+            setOrder(status)
             setGeneratingBook(false)
             setGenerationProgress(0)
+
+            // Celebrate!
+            setShowCelebration(true)
+            setTimeout(() => setShowCelebration(false), 3000)
+            return
+          }
+
+          // Timeout protection
+          if (pollCount >= maxPolls) {
+            console.warn('[PreviewPage] ⚠️ Polling timeout after 60s')
+            clearInterval(pollInterval)
+            setGeneratingBook(false)
+            alert('Generation is taking longer than expected. Please refresh the page.')
           }
         } catch (err) {
-          console.error('[PreviewPage] Error polling status:', err)
+          console.error('[PreviewPage] Polling error:', err)
         }
-      }, 2000)
+      }
 
-      // Safety timeout after 60 seconds
-      setTimeout(() => {
-        clearInterval(pollInterval)
-        if (generatingBook) {
-          setGeneratingBook(false)
-          alert('Generation is taking longer than expected. Please refresh the page.')
-        }
-      }, 60000)
+      // Start polling immediately (no initial delay)
+      const pollInterval = setInterval(() => {
+        void pollOnce(pollInterval)
+      }, 1000)
+      await pollOnce(pollInterval)
     } catch (err) {
-      console.error('Error:', err)
+      console.error('[PreviewPage] Payment error:', err)
       setGeneratingBook(false)
-      alert('Failed to generate full book. Please try again.')
+      alert('Failed to start generation. Please try again.')
     }
   }
 
-  const isFullBookGenerated = order && order.pages_generated >= order.total_pages
+  const isFullBookGenerated =
+    !!order &&
+    (order.bookComplete ||
+      ((order.progress?.pagesGenerated ?? 0) >= (order.progress?.totalPages ?? Number.POSITIVE_INFINITY)) ||
+      (order.pages_generated >= order.total_pages))
   const viewerPages = pages || []
 
   if (loading) {
@@ -178,6 +237,20 @@ export default function PreviewPage() {
           message="Generating your complete book..."
           progress={generationProgress}
         />
+      )}
+
+      {showCelebration && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 text-center max-w-md mx-4 animate-bounce">
+            <div className="text-6xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-dark-blue mb-2">
+              Your Book is Ready!
+            </h2>
+            <p className="text-gray-600">
+              All pages have been personalized and are ready to download.
+            </p>
+          </div>
+        </div>
       )}
 
       <PaymentModal

@@ -62,6 +62,7 @@ export interface Order {
   id: string | number  // UUID string from API, or number
   order_number: string
   book_id: string  // UUID
+  bookCode?: string  // Publication code to fetch book details
   status: string
   characters_data?: Record<string, {
     stylized_avatar_url?: string

@@ -139,11 +139,8 @@ export default function BookPage() {
       
       // Trigger avatar generation
       await generateAvatars(order.id)
-      
-      // Wait for completion (30 seconds)
-      await new Promise(resolve => setTimeout(resolve, 30000))
-      
-      // Fetch order status to get avatar URLs
+
+      // Backend waits for completion before returning; fetch status immediately (no artificial delay)
       const orderStatus = await getOrderStatus(order.id)
       console.log('[BookPage] Order status after generation:', orderStatus)
       
@@ -211,10 +208,8 @@ export default function BookPage() {
     try {
       setLoadingState({ show: true, message: 'Personalizing your book...' })
       await generatePreview(order.id)
-      
-      // Wait for preview generation (30 seconds)
-      await new Promise(resolve => setTimeout(resolve, 30000))
-      
+
+      // Backend waits for completion before returning; navigate immediately (no artificial delay)
       setLoadingState(null)
       // Use full UUID string for navigation
       router.push(`/preview/${order.id}`)
