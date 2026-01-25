@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Navigation Test Guide</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .success { color: #059669; }
+        .error { color: #DC2626; }
+        .warning { color: #D97706; }
+        .step {
+            background: #F3F4F6;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3B82F6;
+        }
+        .code {
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        h1 { color: #1F2937; }
+        h2 { color: #374151; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>🧭 Navigation Test Guide</h1>
+    
+    <div class="step">
+        <h3>✅ Current Status</h3>
+        <p class="success">Navigation is already correctly implemented!</p>
+        <ul>
+            <li>✅ Link component properly imported</li>
+            <li>✅ href uses correct path: /books/{publication_code}</li>
+            <li>✅ Route file exists at /app/books/[code]/page.tsx</li>
+            <li>✅ No linter errors</li>
+        </ul>
+    </div>
+
+    <h2>🧪 How to Test</h2>
+    
+    <div class="step">
+        <h3>Step 1: Start Both Services</h3>
+        <div class="code">
+# Terminal 1 - Backend
+cd /path/to/backend
+npm run dev
+# Should run on http://localhost:3002
+
+# Terminal 2 - Frontend
+cd /Users/domen/pastel-book-maker
+npm run dev
+# Should run on http://localhost:3001
+        </div>
+    </div>
+
+    <div class="step">
+        <h3>Step 2: Open Homepage</h3>
+        <p>Navigate to: <code>http://localhost:3001</code></p>
+        <p>You should see books loaded from your database</p>
+    </div>
+
+    <div class="step">
+        <h3>Step 3: Check Browser Console</h3>
+        <p>Press F12 to open Developer Tools</p>
+        <p>Look for any errors (should be none)</p>
+    </div>
+
+    <div class="step">
+        <h3>Step 4: Test Navigation</h3>
+        <ol>
+            <li>Hover over a "CREATE HERE" button</li>
+            <li>Check bottom-left corner of browser</li>
+            <li class="success">Should show: localhost:3001/books/BOOK_...</li>
+            <li>Click the button</li>
+            <li class="success">URL should change immediately (no reload)</li>
+            <li class="success">Book detail page should load</li>
+        </ol>
+    </div>
+
+    <h2>🔍 If Navigation Doesn't Work</h2>
+
+    <div class="step">
+        <h3>Check 1: Verify publication_code exists</h3>
+        <div class="code">
+# Test API directly
+curl http://localhost:3002/api/public/books | jq '.books[0].publication_code'
+
+# Should return something like: "BOOK_1769178064160"
+        </div>
+        <p class="error">If it returns null or is missing → API needs to return publication_code field</p>
+    </div>
+
+    <div class="step">
+        <h3>Check 2: Clear Next.js cache</h3>
+        <div class="code">
+cd /Users/domen/pastel-book-maker
+rm -rf .next
+npm run dev
+        </div>
+        <p>Then try clicking the link again</p>
+    </div>
+
+    <div class="step">
+        <h3>Check 3: Browser Console Errors</h3>
+        <p>Press F12 and check Console tab for:</p>
+        <ul>
+            <li class="error">❌ Hydration errors</li>
+            <li class="error">❌ "publication_code is undefined"</li>
+            <li class="error">❌ Failed to fetch</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h3>Check 4: Network Tab</h3>
+        <ol>
+            <li>Open DevTools → Network tab</li>
+            <li>Refresh the page</li>
+            <li>Look for request to: /api/public/books</li>
+            <li>Click on it → Preview tab</li>
+            <li class="success">Should show: { "books": [...] } with publication_code in each book</li>
+        </ol>
+    </div>
+
+    <h2>📝 Code Reference</h2>
+
+    <div class="step">
+        <h3>Current Implementation</h3>
+        <p><strong>File:</strong> components/FavouritesSection.tsx (Lines 139-144)</p>
+        <div class="code">
+&lt;Link
+  href={`/books/${book.publication_code}`}
+  className="block w-full text-center border-2 border-blue-600..."
+&gt;
+  CREATE HERE
+&lt;/Link&gt;
+        </div>
+        <p class="success">✅ This is correct! No changes needed.</p>
+    </div>
+
+    <div class="step">
+        <h3>Route File</h3>
+        <p><strong>Path:</strong> /app/books/[code]/page.tsx</p>
+        <p class="success">✅ Exists and is properly configured</p>
+        <ul>
+            <li>Uses useParams() to get code from URL</li>
+            <li>Fetches book data from API</li>
+            <li>Shows upload interface</li>
+        </ul>
+    </div>
+
+    <h2>✅ Expected Result</h2>
+    
+    <div class="step">
+        <p><strong>When clicking "CREATE HERE":</strong></p>
+        <ol>
+            <li>URL changes to: <code>http://localhost:3001/books/BOOK_...</code></li>
+            <li>Page transitions smoothly (no reload)</li>
+            <li>Book detail page loads with:
+                <ul>
+                    <li>Book title and description</li>
+                    <li>Price display</li>
+                    <li>Character upload fields (Dad, Child, etc.)</li>
+                    <li>"Generate Avatars" button</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div style="margin-top: 40px; padding: 20px; background: #DBEAFE; border-radius: 8px;">
+        <h3 style="margin-top: 0;">💡 Summary</h3>
+        <p><strong>Navigation is already correctly implemented.</strong></p>
+        <p>If it's not working, the issue is likely:</p>
+        <ol>
+            <li>Backend not returning publication_code field</li>
+            <li>Next.js cache needs clearing</li>
+            <li>JavaScript not loading properly</li>
+        </ol>
+        <p>Follow the checks above to diagnose the issue.</p>
+    </div>
+</body>
+</html>
+
