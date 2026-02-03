@@ -130,7 +130,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-gray-900">Personalized</span> Storybooks That
+            <span className="text-blue-600">Personalized</span> Storybooks That
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
               {" "}Spark Magic
             </span>
