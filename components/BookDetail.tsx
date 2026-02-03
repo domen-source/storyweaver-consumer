@@ -36,7 +36,7 @@ export default function BookDetail({ book, bookId }: BookDetailProps) {
           <p className="text-xl text-gray-600 mb-4">{book.subtitle}</p>
           
           {/* Badge */}
-          <div className="inline-block bg-blue-600 text-white text-sm font-bold py-1 px-4 rounded-full mb-6">
+          <div className="inline-block bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-bold py-1 px-4 rounded-full mb-6">
             ★ {book.badge} ★
           </div>
         </div>
@@ -99,10 +99,11 @@ export default function BookDetail({ book, bookId }: BookDetailProps) {
           ))}
         </div>
 
-        {/* Price */}
-        <p className="text-3xl font-bold text-blue-600 mb-8">
-          Price: <span className="text-4xl">{book.price}</span>
-        </p>
+        {/* Price Card */}
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-lg p-6 mb-8">
+          <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide mb-2">Price</p>
+          <p className="text-4xl font-bold text-blue-700">{book.price}</p>
+        </div>
 
         {/* Personalization Form */}
         <PersonalizationForm characters={book.characters} bookId={bookId} />

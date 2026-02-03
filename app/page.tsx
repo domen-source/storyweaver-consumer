@@ -10,10 +10,10 @@ export default function Home() {
     <main className="min-h-screen">
       <AnnouncementBanner />
       <HeroSection />
-      <HowMagicWorks />
-      <FavouritesSection />
-      <CommunityPhotosSection />
       <ReviewsSection />
+      <FavouritesSection />
+      <HowMagicWorks />
+      <CommunityPhotosSection />
     </main>
   )
 }

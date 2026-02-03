@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 const reviews = [
@@ -51,11 +51,30 @@ const reviews = [
 export default function ReviewsSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current
+    if (!scrollContainer) return
+
+    const scrollInterval = setInterval(() => {
+      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth
+      
+      if (scrollContainer.scrollLeft >= maxScroll) {
+        // Reset to beginning
+        scrollContainer.scrollTo({ left: 0, behavior: 'smooth' })
+      } else {
+        // Scroll to the right by one card width
+        scrollContainer.scrollBy({ left: 344, behavior: 'smooth' }) // 320px card + 24px gap
+      }
+    }, 3000) // Scroll every 3 seconds
+
+    return () => clearInterval(scrollInterval)
+  }, [])
+
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-12 px-4 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto">
         {/* Rating Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
             <span className="text-3xl md:text-4xl font-bold font-display text-gray-900">Rated 4.9 out of 5</span>
             <span className="text-3xl">⭐</span>

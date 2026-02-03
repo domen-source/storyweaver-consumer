@@ -41,12 +41,12 @@ export default function FavouritesSection() {
 
   if (loading) {
     return (
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+      <section className="pt-2 pb-20 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold font-display text-gray-900 text-center mb-4">
             Your Favorites
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p className="text-center text-gray-600 mb-6 text-lg">
             Rated 4.9 out of 5 ⭐ by thousands of happy families
           </p>
           <div className="flex justify-center">
@@ -59,12 +59,12 @@ export default function FavouritesSection() {
 
   if (error && books.length === 0) {
     return (
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+      <section className="pt-2 pb-20 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold font-display text-gray-900 mb-4">
             Your Favorites
           </h2>
-          <p className="text-center text-gray-600 mb-12 text-lg">
+          <p className="text-center text-gray-600 mb-6 text-lg">
             Rated 4.9 out of 5 ⭐ by thousands of happy families
           </p>
           <div className="bg-pink-50 border border-pink-200 rounded-2xl p-8 max-w-md mx-auto">
@@ -88,12 +88,12 @@ export default function FavouritesSection() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+    <section className="pt-2 pb-20 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold font-display text-center mb-4 text-gray-900">
           Your Favorites
         </h2>
-        <p className="text-center text-gray-600 mb-12 text-lg">
+        <p className="text-center text-gray-600 mb-6 text-lg">
           Rated 4.9 out of 5 ⭐ by thousands of happy families
         </p>
 
@@ -102,7 +102,7 @@ export default function FavouritesSection() {
           {books.map((book, index) => (
             <motion.div
               key={book.id}
-              className="group cursor-pointer"
+              className="group cursor-pointer relative"
               whileHover={{ y: -10 }}
               transition={{ duration: 0.3 }}
               initial={{ opacity: 0, y: 30 }}
@@ -113,8 +113,8 @@ export default function FavouritesSection() {
                 {/* Bestseller Badge - show for first book */}
                 {index === 0 && (
                   <div className="absolute top-4 left-4 z-10">
-                    <div className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                      ⭐ BESTSELLER
+                    <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+                      ⭐ #1 Book in the USA ⭐
                     </div>
                   </div>
                 )}
