@@ -29,14 +29,14 @@ export default function AnnouncementBanner() {
   }, [])
 
   return (
-    <div className="bg-red-600 text-white text-center py-2 px-4">
-      <p className="text-sm">
-        Early Valentine&apos;s Deal: Use LOVE for 10% OFF for any personalized book. Valid{' '}
-        <span className="font-semibold">
-          {String(timeLeft.hours).padStart(2, '0')}h {String(timeLeft.minutes).padStart(2, '0')}m {String(timeLeft.seconds).padStart(2, '0')}s
+    <div className="px-3 py-4 sm:px-4 sm:py-5 bg-gradient-to-r from-pink-400/70 via-rose-400/60 to-orange-300/70">
+      <p className="mx-auto max-w-5xl rounded-2xl border border-white/35 bg-white/20 px-4 py-3 text-center text-base font-semibold text-white shadow-[0_8px_30px_rgba(236,72,153,0.28)] backdrop-blur-xl sm:text-lg md:text-xl">
+        ✨ Limited Time Offer: <span className="font-extrabold">20% OFF</span> your first personalized book!{' '}
+        Use code: <span className="ml-1 rounded-lg border border-white/45 bg-white/30 px-3 py-1 font-extrabold tracking-wide">MAGIC20</span>
+        <span className="ml-2 inline-block font-medium text-white/95">
+          Ends in {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}
         </span>
       </p>
     </div>
   )
 }
-

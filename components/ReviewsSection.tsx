@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import { motion } from 'framer-motion'
 
 const reviews = [
   {
@@ -51,16 +52,15 @@ export default function ReviewsSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <section className="py-16 px-4 bg-white">
+    <section className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-7xl mx-auto">
         {/* Rating Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <span className="text-2xl font-bold text-dark-blue">Rated 4.9 out of 5</span>
-            <span className="text-2xl">⭐</span>
-            <span className="text-lg text-gray-600">(651)</span>
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span className="text-3xl md:text-4xl font-bold font-display text-gray-900">Rated 4.9 out of 5</span>
+            <span className="text-3xl">⭐</span>
           </div>
-          <p className="text-gray-600">Showing our favorite reviews.</p>
+          <p className="text-gray-600 text-lg">(651) Showing our favorite reviews</p>
         </div>
 
         {/* Reviews Carousel */}
@@ -72,29 +72,38 @@ export default function ReviewsSection() {
           }}
         >
           {reviews.map((review, index) => (
-            <div
+            <motion.div
               key={index}
-              className="flex-shrink-0 w-80 bg-white rounded-lg shadow-md p-6 border border-gray-100"
+              className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg p-6 border border-gray-100"
               style={{ scrollSnapAlign: 'start' }}
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="font-semibold text-dark-blue">{review.name}</p>
+                  <p className="font-semibold font-display text-gray-900">{review.name}</p>
                   <p className="text-sm text-gray-500">{review.date}</p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white font-bold">
+                  {review.name.charAt(0)}
                 </div>
               </div>
               <div className="flex gap-1 mb-3">
                 {[...Array(review.rating)].map((_, i) => (
-                  <span key={i} className="text-yellow-400 text-lg">⭐</span>
+                  <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                  </svg>
                 ))}
               </div>
-              <h3 className="font-semibold text-lg text-dark-blue mb-2">{review.title}</h3>
-              <p className="text-gray-600 text-sm">{review.comment}</p>
-            </div>
+              <h3 className="font-bold font-display text-lg text-gray-900 mb-2">{review.title}</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">{review.comment}</p>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   )
 }
-

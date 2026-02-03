@@ -1,57 +1,75 @@
-import Image from 'next/image'
+'use client'
+
+import { motion } from 'framer-motion'
 
 const steps = [
   {
-    title: 'Upload Photo & AI Illustration',
-    description: 'Simply upload a photo of your child and other family members. Our AI will automatically detect faces and create illustrated versions of everyone.',
-    imageUrl: 'https://pastel-book-maker.lovable.app/assets/photo-to-illustration-By5JwIeV.png',
-    imageAlt: 'Photo to illustration transformation',
+    number: 1,
+    title: 'Upload Photos',
+    description: 'Simply upload photos of your family members. Our AI will create illustrated versions of everyone.',
+    gradient: 'from-pink-100 to-purple-100',
+    badgeColor: 'bg-pink-500',
+    placeholder: '[PLACEHOLDER - UPLOAD ICON (Cute illustration)]',
   },
   {
-    title: 'Choose Story',
-    description: 'Choose the story you would like to see in a book. Each story is designed in a fun and educational way.',
-    imageUrl: 'https://pastel-book-maker.lovable.app/assets/step-child-book-BvucgGPI.png',
-    imageAlt: 'Child reading a book',
+    number: 2,
+    title: 'Choose Your Story',
+    description: 'Pick from our collection of heartwarming stories. Each one is designed to be fun and educational.',
+    gradient: 'from-blue-100 to-cyan-100',
+    badgeColor: 'bg-blue-500',
+    placeholder: '[PLACEHOLDER - BOOK ICON (Cute illustration)]',
   },
   {
-    title: 'Enjoy Personalized Book',
-    description: 'Enjoy this uniquely personalized book and let your imagination run wild!',
-    imageUrl: 'https://pastel-book-maker.lovable.app/assets/step-family-reading-6DIKk2YZ.png',
-    imageAlt: 'Family reading together',
+    number: 3,
+    title: 'Enjoy Together',
+    description: 'Receive your personalized book and create magical memories reading together with your loved ones.',
+    gradient: 'from-purple-100 to-pink-100',
+    badgeColor: 'bg-purple-500',
+    placeholder: '[PLACEHOLDER - FAMILY ICON (Cute illustration)]',
   },
 ]
 
 export default function HowMagicWorks() {
   return (
-    <section className="py-16 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-dark-blue mb-4">
-            How Magic Works
-          </h2>
-          <p className="text-lg text-gray-600">
-            Create a personalized book in just a few simple steps
-          </p>
-        </div>
+    <section className="py-20 bg-white">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl md:text-4xl font-bold font-display text-center mb-4 text-gray-900">
+          How Magic Works
+        </h2>
+        <p className="text-center text-gray-600 mb-16 text-lg">
+          Create a personalized book in just a few simple steps
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
           {steps.map((step, index) => (
-            <div key={index} className="text-center">
-              <div className="mb-6 relative h-48">
-                <Image
-                  src={step.imageUrl}
-                  alt={step.imageAlt}
-                  fill
-                  className="object-contain"
-                />
+            <motion.div 
+              key={step.number}
+              className="text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true }}
+            >
+              <div className="relative mb-6 flex justify-center">
+                <motion.div 
+                  className={`w-40 h-40 md:w-48 md:h-48 bg-gradient-to-br ${step.gradient} rounded-full flex items-center justify-center shadow-lg`}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <span className="text-gray-400 text-xs text-center px-4">{step.placeholder}</span>
+                </motion.div>
+                <div className={`absolute -top-2 -right-2 ${step.badgeColor} text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-md`}>
+                  {step.number}
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-dark-blue mb-3">{step.title}</h3>
-              <p className="text-gray-600">{step.description}</p>
-            </div>
+              <h3 className="text-xl md:text-2xl font-bold font-display mb-3 text-gray-900">{step.title}</h3>
+              <p className="text-gray-600">
+                {step.description}
+              </p>
+            </motion.div>
           ))}
         </div>
       </div>
     </section>
   )
 }
-
