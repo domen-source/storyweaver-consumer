@@ -258,7 +258,9 @@ export default function BookPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-6">
             {/* Left Column - Book Preview */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-dark-blue mb-2">{book.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-dark-blue mb-2">
+                {book.title === "Father&Child w Cover" ? "Your Daddy loves you, Liam!" : book.title}
+              </h1>
               {book.subtitle && (
                 <p className="text-xl text-gray-600 mb-6">{book.subtitle}</p>
               )}

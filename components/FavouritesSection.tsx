@@ -91,7 +91,7 @@ export default function FavouritesSection() {
   }
 
   return (
-    <section className="pt-2 pb-20 bg-gradient-to-b from-white to-gray-50">
+    <section id="favorites" className="pt-2 pb-20 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold font-display text-center mb-4 text-gray-900">
           Your Favorites
@@ -149,7 +149,9 @@ export default function FavouritesSection() {
 
                   {/* Title */}
                   <h3 className="text-xl font-bold font-display text-gray-900 mb-2 group-hover:text-pink-600 transition-colors">
-                    {book.title}
+                    {(index === 0 || index === 1) && book.title === "Father&Child w Cover" 
+                      ? "Your Daddy loves you" 
+                      : book.title}
                   </h3>
 
                   {/* Description */}
