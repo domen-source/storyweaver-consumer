@@ -1,17 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import BackButton from '@/components/BackButton'
 import PageViewer from '@/components/PageViewer'
-import PaymentModal from '@/components/PaymentModal'
-import LoadingAnimation from '@/components/LoadingAnimation'
-import { getOrderPages, getOrderStatus, generateFullBook, fetchBook, OrderPage, Order, Book } from '@/lib/api'
+import { getOrderPages, getOrderStatus, fetchBook, OrderPage, Order, Book } from '@/lib/api'
 
 export default function PreviewPage() {
   const params = useParams()
-  const router = useRouter()
+  const searchParams = useSearchParams()
   const orderId = params.orderId as string
+  const isUnlocked = searchParams.get('unlocked') === 'true'
 
   // Validate order ID (should be UUID string, not truncated number)
   console.log('[PreviewPage] Order ID:', orderId)
@@ -35,10 +34,7 @@ export default function PreviewPage() {
   const [book, setBook] = useState<Book | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [showPaymentModal, setShowPaymentModal] = useState(false)
-  const [generatingBook, setGeneratingBook] = useState(false)
-  const [generationProgress, setGenerationProgress] = useState(0)
-  const [showCelebration, setShowCelebration] = useState(false)
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
 
   useEffect(() => {
     loadPreview()
@@ -85,23 +81,27 @@ export default function PreviewPage() {
         }
       }
       
-      // Merge personalized pages with template placeholders
-      const totalPages = orderStatus.progress?.totalPages || 4
+      // For preview, only show first 4 pages (3 unlocked + 1 locked)
+      const previewPageCount = 4
       const viewerPages: OrderPage[] = []
       
-      for (let i = 0; i < totalPages; i++) {
+      for (let i = 0; i < previewPageCount; i++) {
         const existingPage = pagesArray.find(p => p.pageNumber === i)
         
         if (existingPage) {
           // We have the personalized page
-          viewerPages.push(existingPage)
+          // Mark first 3 pages as preview (unlocked), 4th as locked
+          viewerPages.push({
+            ...existingPage,
+            isPreview: i < 3  // First 3 pages unlocked, 4th locked
+          })
         } else if (bookData?.template_data?.pages?.[i]?.template_image_url) {
-          // Use template image for locked page
+          // Use template image
           viewerPages.push({
             pageNumber: i,
             imageUrl: bookData.template_data.pages[i].template_image_url,
             createdAt: null,
-            isPreview: false  // Mark as locked
+            isPreview: i < 3  // First 3 pages unlocked, 4th locked
           })
         } else {
           // No template available, use placeholder
@@ -109,12 +109,12 @@ export default function PreviewPage() {
             pageNumber: i,
             imageUrl: '',
             createdAt: null,
-            isPreview: false
+            isPreview: i < 3
           })
         }
       }
       
-      console.log('[PreviewPage] Viewer pages with templates:', viewerPages)
+      console.log('[PreviewPage] Viewer pages (4 total, 3 unlocked):', viewerPages)
       
       setPages(viewerPages)
       setOrder(orderStatus)
@@ -126,88 +126,51 @@ export default function PreviewPage() {
     }
   }
 
-  const handlePayment = async () => {
+  const handleStripeCheckout = async () => {
     try {
-      setGeneratingBook(true)
-      setGenerationProgress(0)
-      setShowPaymentModal(false)
+      setIsProcessingPayment(true)
 
-      console.log('[PreviewPage] Starting full book generation...')
+      console.log('[PreviewPage] Creating Stripe checkout session...')
 
-      // Start generation (generation happens in background)
-      await generateFullBook(orderId)
+      const response = await fetch('/api/create-preview-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          bookTitle: book?.title || 'Personalized Storybook',
+          bookCode: order?.bookCode || book?.publication_code,
+          priceInCents: 4499,
+        }),
+      })
 
-      // Poll for progress (faster interval) with timeout protection
-      let pollCount = 0
-      const maxPolls = 60 // 60 seconds max
-
-      const pollOnce = async (pollInterval: ReturnType<typeof setInterval>) => {
-        try {
-          pollCount++
-
-          const status = await getOrderStatus(orderId)
-          console.log('[PreviewPage] Poll', pollCount, 'Status:', status.progress)
-
-          const currentPages = status.progress?.pagesGenerated || 0
-          const totalPages = status.progress?.totalPages || 1
-          const progress = Math.round((currentPages / totalPages) * 100)
-
-          setGenerationProgress(progress)
-
-          // Check if complete
-          if (status.bookComplete || currentPages >= totalPages) {
-            console.log('[PreviewPage] ✅ Generation complete!')
-            clearInterval(pollInterval)
-
-            // Fetch all pages
-            const allPagesResponse = await getOrderPages(orderId)
-            let allPagesArray: OrderPage[] = []
-            if (Array.isArray(allPagesResponse)) {
-              allPagesArray = allPagesResponse
-            } else if (allPagesResponse && typeof allPagesResponse === 'object') {
-              allPagesArray = (allPagesResponse as any).pages || (allPagesResponse as any).data || []
-            }
-
-            setPages(allPagesArray)
-            setOrder(status)
-            setGeneratingBook(false)
-            setGenerationProgress(0)
-
-            // Celebrate!
-            setShowCelebration(true)
-            setTimeout(() => setShowCelebration(false), 3000)
-            return
-          }
-
-          // Timeout protection
-          if (pollCount >= maxPolls) {
-            console.warn('[PreviewPage] ⚠️ Polling timeout after 60s')
-            clearInterval(pollInterval)
-            setGeneratingBook(false)
-            alert('Generation is taking longer than expected. Please refresh the page.')
-          }
-        } catch (err) {
-          console.error('[PreviewPage] Polling error:', err)
-        }
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
       }
 
-      // Start polling immediately (no initial delay)
-      const pollInterval = setInterval(() => {
-        void pollOnce(pollInterval)
-      }, 1000)
-      await pollOnce(pollInterval)
+      const { url } = await response.json()
+
+      if (!url) {
+        throw new Error('No checkout URL returned')
+      }
+
+      // Redirect to Stripe Checkout
+      window.location.href = url
     } catch (err) {
-      console.error('[PreviewPage] Payment error:', err)
-      setGeneratingBook(false)
-      alert('Failed to start generation. Please try again.')
+      console.error('[PreviewPage] Checkout error:', err)
+      setIsProcessingPayment(false)
+      alert('Failed to start checkout. Please try again.')
     }
   }
 
+  // Book is considered "full" if unlocked via payment or if generation is complete
   const isFullBookGenerated =
-    !!order &&
-    (order.bookComplete ||
-      ((order.progress?.pagesGenerated ?? 0) >= (order.progress?.totalPages ?? Number.POSITIVE_INFINITY)) ||
-      (order.pages_generated >= order.total_pages))
+    isUnlocked ||
+    (!!order &&
+      (order.bookComplete ||
+        ((order.progress?.pagesGenerated ?? 0) >= (order.progress?.totalPages ?? Number.POSITIVE_INFINITY)) ||
+        (order.pages_generated >= order.total_pages)))
   const viewerPages = pages || []
 
   if (loading) {
@@ -232,34 +195,6 @@ export default function PreviewPage() {
 
   return (
     <>
-      {generatingBook && (
-        <LoadingAnimation
-          message="Generating your complete book..."
-          progress={generationProgress}
-        />
-      )}
-
-      {showCelebration && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 text-center max-w-md mx-4 animate-bounce">
-            <div className="text-6xl mb-4">🎉</div>
-            <h2 className="text-2xl font-bold text-dark-blue mb-2">
-              Your Book is Ready!
-            </h2>
-            <p className="text-gray-600">
-              All pages have been personalized and are ready to download.
-            </p>
-          </div>
-        </div>
-      )}
-
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        onPayment={handlePayment}
-        amount={39.99}
-      />
-
       <div className="min-h-screen bg-gradient-to-b from-pastel-blue to-white">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <BackButton />
@@ -289,20 +224,32 @@ export default function PreviewPage() {
             <div className="max-w-4xl mx-auto mt-8">
               <div className="bg-white rounded-lg shadow-xl p-8 text-center">
                 <h2 className="text-2xl font-bold text-dark-blue mb-4">
-                  Love what you see?
+                  Ready to bring this story to life?
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  Get the complete personalized book with all {order?.total_pages || 15} pages beautifully printed and bound.
+                  Get a complete personalized book with all 26 pages beautifully printed and sent to you.
                 </p>
-                <button
-                  onClick={() => setShowPaymentModal(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-xl transition-colors inline-flex items-center gap-2"
-                >
-                  <span>Get Full Book - $39.99</span>
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                {isProcessingPayment ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                    <p className="text-gray-600">Redirecting to secure checkout...</p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleStripeCheckout}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-xl transition-colors"
+                  >
+                    Order Your Book - $44.99
+                  </button>
+                )}
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
-                </button>
+                  <p className="text-xs text-gray-500">
+                    Secure payment powered by Stripe
+                  </p>
+                </div>
               </div>
             </div>
           )}

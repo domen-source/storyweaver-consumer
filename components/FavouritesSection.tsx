@@ -50,7 +50,7 @@ export default function FavouritesSection() {
             Your Favorites
           </h2>
           <p className="text-center text-gray-600 mb-6 text-lg">
-            Rated 4.9 out of 5 ⭐ by thousands of happy families
+            ⭐ The Perfect Gift for your Loved Ones ⭐
           </p>
           <div className="flex justify-center">
             <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-500 rounded-full animate-spin"></div>
@@ -68,7 +68,7 @@ export default function FavouritesSection() {
             Your Favorites
           </h2>
           <p className="text-center text-gray-600 mb-6 text-lg">
-            Rated 4.9 out of 5 ⭐ by thousands of happy families
+            ⭐ The Perfect Gift for your Loved Ones ⭐
           </p>
           <div className="bg-pink-50 border border-pink-200 rounded-2xl p-8 max-w-md mx-auto">
             <svg className="w-16 h-16 mx-auto mb-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,7 +97,7 @@ export default function FavouritesSection() {
           Your Favorites
         </h2>
         <p className="text-center text-gray-600 mb-6 text-lg">
-          Rated 4.9 out of 5 ⭐ by thousands of happy families
+          ⭐ The Perfect Gift for your Loved Ones ⭐
         </p>
 
         {/* Book Grid */}

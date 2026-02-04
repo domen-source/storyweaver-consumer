@@ -45,16 +45,13 @@ export default function PageViewer({ pages, isPreview = false }: PageViewerProps
   return (
     <div className="max-w-4xl mx-auto">
       {/* Page Display */}
-      <div className="relative bg-white rounded-lg shadow-xl p-4 mb-6">
-        <div className="relative aspect-square">
+      <div className="relative bg-white rounded-lg shadow-xl overflow-hidden mb-6">
+        <div className="relative aspect-video">
           {page.imageUrl ? (
-            <Image
+            <img
               src={page.imageUrl}
               alt={`Page ${page.pageNumber + 1}`}
-              fill
-              sizes="(max-width: 768px) 100vw, 768px"
-              className={`object-contain ${!unlocked ? 'blur-md' : ''}`}
-              priority
+              className={`w-full h-full object-cover ${!unlocked ? 'blur-md' : ''}`}
             />
           ) : (
             <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">

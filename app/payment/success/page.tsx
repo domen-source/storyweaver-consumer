@@ -7,10 +7,13 @@ import Link from 'next/link'
 export default function PaymentSuccessPage() {
   const searchParams = useSearchParams()
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [orderId, setOrderId] = useState<string | null>(null)
 
   useEffect(() => {
     const id = searchParams.get('session_id')
+    const orderIdParam = searchParams.get('order_id')
     setSessionId(id)
+    setOrderId(orderIdParam)
   }, [searchParams])
 
   return (
@@ -61,6 +64,14 @@ export default function PaymentSuccessPage() {
 
         {/* Action Buttons */}
         <div className="space-y-3">
+          {orderId && (
+            <Link
+              href={`/preview/${orderId}?unlocked=true`}
+              className="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            >
+              View All Pages
+            </Link>
+          )}
           <Link
             href="/"
             className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"

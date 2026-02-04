@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react'
 
 interface LoadingAnimationProps {
   message?: string
+  subtext?: string
   progress?: number
 }
 
-export default function LoadingAnimation({ message, progress }: LoadingAnimationProps) {
+export default function LoadingAnimation({ message, subtext, progress }: LoadingAnimationProps) {
   const rotatingMessages = [
     "Your ink is drying...",
     "Your avatars are coming to life...",
@@ -40,24 +41,23 @@ export default function LoadingAnimation({ message, progress }: LoadingAnimation
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 text-center">
-        {/* Spinner */}
-        <div className="relative w-20 h-20 mx-auto mb-6">
-          <div className="absolute inset-0 border-4 border-blue-200 rounded-full"></div>
-          <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
-          <div className="absolute inset-2 border-4 border-pink-600 rounded-full border-t-transparent animate-spin animation-delay-150" style={{ animationDirection: 'reverse' }}></div>
+        {/* Book Icon with Pulse */}
+        <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-pink-50 flex items-center justify-center animate-pulse">
+          <svg className="w-10 h-10 text-pink-600" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 4.5C10.07 4.5 8.32 5.13 6.96 6.19C6.96 6.19 6.96 6.19 6.96 6.19L3 4v14l3.96 2.19C8.32 18.87 10.07 18.5 12 18.5s3.68.37 5.04 1.43L21 18V4l-3.96 2.19C15.68 5.13 13.93 4.5 12 4.5zM11 16.5H6v-2h5v2zm0-4H6v-2h5v2zm7 4h-5v-2h5v2zm0-4h-5v-2h5v2z"/>
+          </svg>
         </div>
 
         {/* Message */}
-        <p className="text-xl font-semibold text-dark-blue mb-4">
-          {displayMessage}
-          {!message && <span className="inline-block w-4">{dots}</span>}
-        </p>
+        <h3 className="text-xl font-semibold text-dark-blue mb-2">
+          {message || 'Creating your characters...'}
+        </h3>
 
         {/* Progress bar */}
         {progress !== undefined && (
           <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
             <div
-              className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+              className="bg-pink-600 h-3 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -68,7 +68,9 @@ export default function LoadingAnimation({ message, progress }: LoadingAnimation
         )}
 
         {progress === undefined && (
-          <p className="text-sm text-gray-600">This may take about 30 seconds...</p>
+          <p className="text-sm text-gray-600">
+            {subtext || 'This may take about 30 seconds, as we need to make sure they look amazing! ❤️'}
+          </p>
         )}
       </div>
     </div>

@@ -19,7 +19,7 @@ export default function BookPage() {
   // Upload states
   const [uploadedPhotos, setUploadedPhotos] = useState<Record<string, { file: File; url: string; uploaded: boolean }>>({})
   const [uploading, setUploading] = useState<string | null>(null)
-  const [loadingState, setLoadingState] = useState<{ show: boolean; message: string } | null>(null)
+  const [loadingState, setLoadingState] = useState<{ show: boolean; message: string; subtext?: string } | null>(null)
   
   // Character names state
   const [characterNames, setCharacterNames] = useState<Record<string, string>>({})
@@ -27,6 +27,9 @@ export default function BookPage() {
   // Avatar approval states
   const [avatars, setAvatars] = useState<Record<string, string> | null>(null)
   const [showAvatarApproval, setShowAvatarApproval] = useState(false)
+  
+  // Selected hero image state
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
 
   useEffect(() => {
     loadBookAndCreateOrder()
@@ -206,7 +209,11 @@ export default function BookPage() {
     if (!order) return
 
     try {
-      setLoadingState({ show: true, message: 'Personalizing your book...' })
+      setLoadingState({ 
+        show: true, 
+        message: 'Creating the pages of your book...', 
+        subtext: "We're putting your characters in a book so you'll see how it would look ❤️. This process may take about 30 seconds, hang on tight!"
+      })
       await generatePreview(order.id)
 
       // Backend waits for completion before returning; navigate immediately (no artificial delay)
@@ -242,7 +249,7 @@ export default function BookPage() {
 
   return (
     <>
-      {loadingState?.show && <LoadingAnimation message={loadingState.message} />}
+      {loadingState?.show && <LoadingAnimation message={loadingState.message} subtext={loadingState.subtext} />}
       
       <div className="min-h-screen bg-gradient-to-b from-pastel-blue to-white">
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -258,47 +265,54 @@ export default function BookPage() {
 
               {/* Hero Image - Large Book Cover */}
               <div className="relative mb-6 bg-white rounded-lg shadow-lg overflow-hidden">
-                <div className="relative w-full" style={{ minHeight: '500px' }}>
-                  <img
-                    src={book.preview_image_url}
-                    alt={book.title}
-                    className="w-full h-auto object-contain"
-                    style={{ maxHeight: '600px', margin: '0 auto', display: 'block' }}
-                    onError={(e) => {
-                      console.error('[BookPage] Image failed to load:', book.preview_image_url)
-                      e.currentTarget.src = 'https://via.placeholder.com/600x800?text=Book+Cover'
-                      e.currentTarget.onerror = null // Prevent infinite loop
-                    }}
-                  />
-                </div>
+                <img
+                  src={selectedImageUrl || book.preview_image_url}
+                  alt={book.title}
+                  className="w-full h-auto object-contain rounded-lg"
+                  style={{ maxHeight: '400px' }}
+                  onError={(e) => {
+                    console.error('[BookPage] Image failed to load:', selectedImageUrl || book.preview_image_url)
+                    e.currentTarget.src = 'https://via.placeholder.com/600x800?text=Book+Cover'
+                    e.currentTarget.onerror = null // Prevent infinite loop
+                  }}
+                />
               </div>
 
               {/* Detail Images Carousel */}
-              {book.detail_images && book.detail_images.length > 0 && (
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-dark-blue mb-3">Book Preview</h3>
-                  <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                    {book.detail_images.slice(0, 4).map((img, i) => (
-                      <div key={i} className="flex-shrink-0">
-                        <img
-                          src={img}
-                          alt={`${book.title} preview ${i + 1}`}
-                          className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200 hover:border-blue-500 transition-colors cursor-pointer shadow-sm"
-                          onError={(e) => {
-                            console.error('[BookPage] Preview image failed to load:', img)
-                            e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Preview'
-                            e.currentTarget.onerror = null
-                          }}
-                          onClick={() => {
-                            // Optional: Open in lightbox or modal
-                            window.open(img, '_blank')
-                          }}
-                        />
-                      </div>
-                    ))}
+              {(() => {
+                // Combine cover image with detail images, avoiding duplicates
+                const allImages = [book.preview_image_url, ...(book.detail_images || [])].filter(
+                  (img, index, arr) => img && arr.indexOf(img) === index
+                )
+                if (allImages.length === 0) return null
+                return (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-dark-blue mb-3">Book Preview</h3>
+                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                      {allImages.slice(0, 5).map((img, i) => {
+                        const isSelected = selectedImageUrl === img || (!selectedImageUrl && i === 0)
+                        return (
+                          <div key={i} className="flex-shrink-0">
+                            <img
+                              src={img}
+                              alt={`${book.title} preview ${i + 1}`}
+                              className={`w-32 h-32 object-cover rounded-lg border-2 transition-colors cursor-pointer shadow-sm ${
+                                isSelected ? 'border-blue-500' : 'border-gray-200 hover:border-blue-300'
+                              }`}
+                              onError={(e) => {
+                                console.error('[BookPage] Preview image failed to load:', img)
+                                e.currentTarget.src = 'https://via.placeholder.com/128x128?text=Preview'
+                                e.currentTarget.onerror = null
+                              }}
+                              onClick={() => setSelectedImageUrl(img)}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )
+              })()}
 
               {/* Description */}
               <div className="bg-white rounded-lg p-6 shadow-md">
