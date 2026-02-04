@@ -5,11 +5,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { fetchBooks, formatPrice, Book } from '@/lib/api'
+import PaymentModal from './PaymentModal'
 
 export default function FavouritesSection() {
   const [books, setBooks] = useState<Book[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null)
 
   useEffect(() => {
     loadBooks()
@@ -99,7 +102,7 @@ export default function FavouritesSection() {
 
         {/* Book Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {books.map((book, index) => (
+          {[...books.slice(0, 1), ...books].map((book, index) => (
             <motion.div
               key={book.id}
               className="group cursor-pointer relative"
@@ -159,12 +162,24 @@ export default function FavouritesSection() {
                     <div className="text-2xl md:text-3xl font-bold text-gray-900">
                       ${formatPrice(book.price_cents)}
                     </div>
-                    <Link 
-                      href={`/books/${book.publication_code}`}
-                      className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
-                    >
-                      Create Here
-                    </Link>
+                    {index === 1 ? (
+                      <button
+                        onClick={() => {
+                          setSelectedBook(book)
+                          setIsPaymentModalOpen(true)
+                        }}
+                        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
+                      >
+                        Buy Now
+                      </button>
+                    ) : (
+                      <Link 
+                        href={`/books/${book.publication_code}`}
+                        className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
+                      >
+                        Create Here
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -172,6 +187,18 @@ export default function FavouritesSection() {
           ))}
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {selectedBook && (
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          onClose={() => {
+            setIsPaymentModalOpen(false)
+            setSelectedBook(null)
+          }}
+          book={selectedBook}
+        />
+      )}
     </section>
   )
 }
