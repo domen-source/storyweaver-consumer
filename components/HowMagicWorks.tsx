@@ -10,6 +10,7 @@ const steps = [
     gradient: 'from-[#E8EDDF] to-[#F0F4E8]',
     badgeColor: 'bg-[#6B8F5E]',
     placeholder: '[PLACEHOLDER - UPLOAD ICON (Cute illustration)]',
+    image: '/uploads/photos/W_Step_1.png',
   },
   {
     number: 2,
@@ -18,6 +19,7 @@ const steps = [
     gradient: 'from-[#DCE4D0] to-[#F0F4E8]',
     badgeColor: 'bg-[#6B8F5E]',
     placeholder: '[PLACEHOLDER - BOOK ICON (Cute illustration)]',
+    image: '/uploads/photos/W_Step_2.png',
   },
   {
     number: 3,
@@ -26,6 +28,7 @@ const steps = [
     gradient: 'from-[#E8EDDF] to-[#DCE4D0]',
     badgeColor: 'bg-[#6B8F5E]',
     placeholder: '[PLACEHOLDER - FAMILY ICON (Cute illustration)]',
+    image: '/uploads/photos/W_Step_3.png',
   },
 ]
 
@@ -52,11 +55,15 @@ export default function HowMagicWorks() {
             >
               <div className="relative mb-6 flex justify-center">
                 <motion.div 
-                  className={`w-40 h-40 md:w-48 md:h-48 bg-gradient-to-br ${step.gradient} rounded-full flex items-center justify-center shadow-lg`}
+                  className={`w-40 h-40 md:w-48 md:h-48 bg-gradient-to-br ${step.gradient} rounded-full flex items-center justify-center shadow-lg overflow-hidden`}
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <span className="text-gray-400 text-xs text-center px-4">{step.placeholder}</span>
+                  <img 
+                    src={step.image} 
+                    alt={step.title}
+                    className="w-full h-full object-cover"
+                  />
                 </motion.div>
                 <div className={`absolute -top-2 -right-2 ${step.badgeColor} text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-md`}>
                   {step.number}
