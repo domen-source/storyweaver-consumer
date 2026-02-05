@@ -8,12 +8,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'pastel-blue': '#E6F2FF',
-        'pastel-pink': '#FFE5F1',
-        'pastel-purple': '#F3E5F5',
-        'coral': '#EC4899',
-        'dark-blue': '#242E42',
-        'light-blue': '#BFDBFE',
+        'pastel-blue': '#E8EDDF',
+        'pastel-pink': '#F0F4E8',
+        'pastel-purple': '#DCE4D0',
+        'coral': '#6B8F5E',
+        'dark-blue': '#3A4D34',
+        'light-blue': '#B5C9A8',
       },
       fontFamily: {
         sans: ['var(--font-poppins)', 'sans-serif'],

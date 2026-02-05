@@ -53,7 +53,7 @@ export default function FavouritesSection() {
             ⭐ The Perfect Gift for your Loved Ones ⭐
           </p>
           <div className="flex justify-center">
-            <div className="w-12 h-12 border-4 border-pink-200 border-t-pink-500 rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-[#B5C9A8] border-t-[#6B8F5E] rounded-full animate-spin"></div>
           </div>
         </div>
       </section>
@@ -70,14 +70,14 @@ export default function FavouritesSection() {
           <p className="text-center text-gray-600 mb-6 text-lg">
             ⭐ The Perfect Gift for your Loved Ones ⭐
           </p>
-          <div className="bg-pink-50 border border-pink-200 rounded-2xl p-8 max-w-md mx-auto">
-            <svg className="w-16 h-16 mx-auto mb-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-[#F0F4E8] border border-[#B5C9A8] rounded-2xl p-8 max-w-md mx-auto">
+            <svg className="w-16 h-16 mx-auto mb-4 text-[#6B8F5E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p className="text-pink-600 font-medium mb-4">{error}</p>
+            <p className="text-[#5A7F4D] font-medium mb-4">{error}</p>
             <button
               onClick={loadBooks}
-              className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full transition-all font-medium hover:shadow-lg"
+              className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white px-6 py-2 rounded-full transition-all font-medium hover:shadow-lg"
             >
               Try Again
             </button>
@@ -116,7 +116,7 @@ export default function FavouritesSection() {
                 {/* Bestseller Badge - show for first book */}
                 {index === 0 && (
                   <div className="absolute top-4 left-4 z-10">
-                    <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+                  <div className="bg-[#6B8F5E] text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
                       ⭐ #1 Book in the USA ⭐
                     </div>
                   </div>
@@ -148,7 +148,7 @@ export default function FavouritesSection() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold font-display text-gray-900 mb-2 group-hover:text-pink-600 transition-colors">
+                  <h3 className="text-xl font-bold font-display text-gray-900 mb-2 group-hover:text-[#5A7F4D] transition-colors">
                     {(index === 0 || index === 1) && book.title === "Father&Child w Cover" 
                       ? "Your Daddy loves you" 
                       : book.title}
@@ -177,7 +177,7 @@ export default function FavouritesSection() {
                     ) : (
                       <Link 
                         href={`/books/${book.publication_code}`}
-                        className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
+                        className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
                       >
                         Create Here
                       </Link>

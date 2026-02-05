@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 // Floating decorative elements
 const FloatingHeart = ({ className, delay = 0 }: { className: string; delay?: number }) => (
   <motion.div
-    className={`absolute text-pink-200 ${className}`}
+    className={`absolute text-[#B5C9A8] ${className}`}
     animate={{ y: [0, -15, 0], rotate: [0, 5, -5, 0] }}
     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay }}
   >
@@ -30,7 +30,7 @@ const FloatingStar = ({ className, delay = 0 }: { className: string; delay?: num
 
 const FloatingCloud = ({ className, delay = 0 }: { className: string; delay?: number }) => (
   <motion.div
-    className={`absolute text-blue-100 ${className}`}
+    className={`absolute text-[#DCE4D0] ${className}`}
     animate={{ x: [0, 10, 0] }}
     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay }}
   >
@@ -44,7 +44,7 @@ const FloatingCloud = ({ className, delay = 0 }: { className: string; delay?: nu
 
 const FloatingSparkle = ({ className, delay = 0 }: { className: string; delay?: number }) => (
   <motion.div
-    className={`absolute text-purple-200 ${className}`}
+    className={`absolute text-[#8BAF7C] ${className}`}
     animate={{ opacity: [0.5, 1, 0.5], scale: [0.8, 1.2, 0.8] }}
     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay }}
   >
@@ -54,21 +54,13 @@ const FloatingSparkle = ({ className, delay = 0 }: { className: string; delay?: 
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-blue-50 via-pink-50 to-white pt-4 pb-12 md:pt-12 md:pb-20">
-      {/* Animated background elements */}
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F0F4E8] to-white pt-4 pb-12 md:pt-12 md:pb-20">
+      {/* Animated background elements - positioned near the title */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <FloatingHeart className="top-20 left-[5%] md:left-[10%]" delay={0} />
-        <FloatingHeart className="top-40 left-[75%] md:right-[15%]" delay={1.5} />
-        <FloatingHeart className="bottom-40 left-[10%] md:left-[20%]" delay={0.8} />
-        <FloatingStar className="top-32 left-[15%] md:left-[25%]" delay={0.5} />
-        <FloatingStar className="top-24 left-[70%] md:right-[25%]" delay={2} />
-        <FloatingStar className="bottom-32 left-[80%] md:right-[10%]" delay={1} />
-        <FloatingCloud className="top-16 left-[2%] md:left-[5%] opacity-60" delay={0} />
-        <FloatingCloud className="top-28 left-[85%] md:right-[8%] opacity-40" delay={2} />
-        <FloatingSparkle className="top-48 left-[20%] md:left-[30%]" delay={0.3} />
-        <FloatingSparkle className="top-36 left-[65%] md:right-[30%]" delay={1.2} />
-        <FloatingSparkle className="bottom-48 left-[8%] md:left-[15%]" delay={0.7} />
-        <FloatingSparkle className="bottom-36 left-[72%] md:right-[20%]" delay={1.8} />
+        <FloatingHeart className="bottom-52 left-[3%] md:left-[8%]" delay={0} />
+        <FloatingStar className="bottom-48 right-[3%] md:right-[8%]" delay={0.5} />
+        <FloatingSparkle className="bottom-60 left-[10%] md:left-[18%]" delay={0.3} />
+        <FloatingSparkle className="bottom-52 right-[10%] md:right-[18%]" delay={1.2} />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -99,7 +91,7 @@ export default function HeroSection() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-gray-900">Personalized</span> Storybooks That
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600">
+            <span className="text-[#5A7F4D]">
               {" "}Spark Magic
             </span>
           </motion.h1>
@@ -119,7 +111,7 @@ export default function HeroSection() {
           >
             <a
               href="#favorites"
-              className="inline-block bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all transform hover:scale-105"
+              className="inline-block bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-xl transition-all transform hover:scale-105"
               onClick={(e) => {
                 e.preventDefault()
                 document.getElementById('favorites')?.scrollIntoView({ behavior: 'smooth' })

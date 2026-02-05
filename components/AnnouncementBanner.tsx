@@ -29,10 +29,10 @@ export default function AnnouncementBanner() {
   }, [])
 
   return (
-    <div className="px-3 py-4 sm:px-4 sm:py-5 bg-gradient-to-r from-pink-400/70 via-rose-400/60 to-orange-300/70">
-      <p className="mx-auto max-w-5xl rounded-2xl border border-white/35 bg-white/20 px-4 py-3 text-center text-base font-semibold text-white shadow-[0_8px_30px_rgba(236,72,153,0.28)] backdrop-blur-xl sm:text-lg md:text-xl">
+    <div className="px-3 py-2 sm:px-4 sm:py-3 bg-[#6B8F5E]">
+      <p className="mx-auto max-w-5xl rounded-xl border border-white/35 bg-white/20 px-4 py-2 text-center text-sm font-semibold text-white shadow-[0_8px_30px_rgba(107,143,94,0.28)] backdrop-blur-xl sm:text-base md:text-lg leading-tight">
         ✨ Limited Time Offer: <span className="font-extrabold">20% OFF</span> your first personalized book!{' '}
-        Use code: <span className="ml-1 rounded-lg border border-white/45 bg-white/30 px-3 py-1 font-extrabold tracking-wide">MAGIC20</span>
+        Use code: <span className="ml-1 font-extrabold tracking-wide">MAGIC20</span>
         <span className="ml-2 inline-block font-medium text-white/95">
           Ends in {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}
         </span>

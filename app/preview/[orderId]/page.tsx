@@ -237,7 +237,7 @@ export default function PreviewPage() {
                 ) : (
                   <button
                     onClick={handleStripeCheckout}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 rounded-lg text-xl transition-colors"
+                    className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white font-bold py-4 px-12 rounded-lg text-xl transition-colors"
                   >
                     Order Your Book - $44.99
                   </button>

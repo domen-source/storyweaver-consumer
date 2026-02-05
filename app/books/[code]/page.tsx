@@ -378,7 +378,7 @@ export default function BookPage() {
                     
                     <button
                       onClick={handleApproveAvatars}
-                      className="w-full py-4 px-6 rounded-lg font-semibold bg-pink-500 hover:bg-pink-600 text-white transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-4 px-6 rounded-lg font-semibold bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white transition-colors flex items-center justify-center gap-2"
                     >
                       <span>✨</span>
                       <span>Looks Good! Generate Preview</span>
@@ -486,12 +486,12 @@ export default function BookPage() {
                       disabled={!canGenerateAvatars()}
                       className={`w-full mt-8 py-4 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
                         canGenerateAvatars()
-                          ? 'bg-pink-500 hover:bg-pink-600 text-white cursor-pointer'
+                          ? 'bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white cursor-pointer'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                     >
                       <span>✨</span>
-                      <span>Generate Avatars & Preview</span>
+                      <span>Generate Avatars</span>
                     </button>
 
                     {!canGenerateAvatars() && (

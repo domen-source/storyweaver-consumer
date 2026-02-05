@@ -106,7 +106,7 @@ export default function ReviewsSection() {
                   <p className="font-semibold font-display text-gray-900">{review.name}</p>
                   <p className="text-sm text-gray-500">{review.date}</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center text-white font-bold">
+                <div className="w-10 h-10 rounded-full bg-[#6B8F5E] flex items-center justify-center text-white font-bold">
                   {review.name.charAt(0)}
                 </div>
               </div>

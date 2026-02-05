@@ -90,7 +90,7 @@ export default function PageViewer({ pages, isPreview = false }: PageViewerProps
           className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
             currentPage === 0
               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-[#6B8F5E] text-white hover:bg-[#5A7F4D]'
           }`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ export default function PageViewer({ pages, isPreview = false }: PageViewerProps
           className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
             currentPage === pages.length - 1
               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-[#6B8F5E] text-white hover:bg-[#5A7F4D]'
           }`}
         >
           Next
@@ -135,7 +135,7 @@ export default function PageViewer({ pages, isPreview = false }: PageViewerProps
               key={page.pageNumber}
               onClick={() => setCurrentPage(index)}
               className={`relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 transition-all ${
-                currentPage === index ? 'border-blue-600 scale-105' : 'border-gray-200 hover:border-gray-300'
+                currentPage === index ? 'border-[#6B8F5E] scale-105' : 'border-gray-200 hover:border-gray-300'
               }`}
             >
               {page.imageUrl ? (
