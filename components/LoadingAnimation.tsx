@@ -11,10 +11,10 @@ interface LoadingAnimationProps {
 
 export default function LoadingAnimation({ message, subtext, progress, variant = 'characters' }: LoadingAnimationProps) {
   const characterSteps = [
-    "Turning photos into illustrated characters",
-    "Shaping smiles, eyes, and expressions",
-    "Adding warmth and personality",
-    "Bringing your characters to life"
+    "Turning photos into illustrated characters 🎨",
+    "Shaping smiles, eyes, and expressions 👀",
+    "Adding warmth and personality 🔥",
+    "Bringing your characters to life ❤️"
   ]
 
   const previewSteps = [

@@ -28,16 +28,7 @@ export default function FavouritesSection() {
         throw new Error('Invalid response format: expected array of books')
       }
       
-      // Reorder books: Father&Child first, Grandma second
-      const orderedBooks = [...data].sort((a, b) => {
-        if (a.title.includes('Father&Child')) return -1
-        if (b.title.includes('Father&Child')) return 1
-        if (a.title.includes('Grandma')) return -1
-        if (b.title.includes('Grandma')) return 1
-        return 0
-      })
-      
-      setBooks(orderedBooks)
+      setBooks(data)
       
       if (data.length === 0) {
         setError('No books available yet')
@@ -111,7 +102,7 @@ export default function FavouritesSection() {
 
         {/* Book Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {books.slice(0, 2).map((book, index) => (
+          {books.map((book, index) => (
             <motion.div
               key={book.id}
               className="group cursor-pointer relative"
@@ -158,11 +149,7 @@ export default function FavouritesSection() {
 
                   {/* Title */}
                   <h3 className="text-xl font-bold font-display text-gray-900 mb-2 group-hover:text-[#5A7F4D] transition-colors">
-                    {book.title.includes('Father&Child')
-                      ? "Your Daddy loves you" 
-                      : book.title.includes('Grandma')
-                      ? "Grandma loves you"
-                      : book.title}
+                    {book.title}
                   </h3>
 
                   {/* Description */}

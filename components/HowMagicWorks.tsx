@@ -14,7 +14,7 @@ const steps = [
   {
     number: 2,
     title: 'Choose Your Story',
-    description: 'Pick from our collection of heartwarming stories. Each one is designed to be fun and educational.',
+    description: 'Pick from our collection of heartwarming stories, each designed to celebrate love, connection, and everyday moments between families.',
     gradient: 'from-[#DCE4D0] to-[#F0F4E8]',
     badgeColor: 'bg-[#6B8F5E]',
     placeholder: '[PLACEHOLDER - BOOK ICON (Cute illustration)]',
