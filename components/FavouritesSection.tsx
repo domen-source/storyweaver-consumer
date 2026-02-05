@@ -28,7 +28,16 @@ export default function FavouritesSection() {
         throw new Error('Invalid response format: expected array of books')
       }
       
-      setBooks(data)
+      // Reorder books: Father&Child first, Grandma second
+      const orderedBooks = [...data].sort((a, b) => {
+        if (a.title.includes('Father&Child')) return -1
+        if (b.title.includes('Father&Child')) return 1
+        if (a.title.includes('Grandma')) return -1
+        if (b.title.includes('Grandma')) return 1
+        return 0
+      })
+      
+      setBooks(orderedBooks)
       
       if (data.length === 0) {
         setError('No books available yet')
@@ -102,7 +111,7 @@ export default function FavouritesSection() {
 
         {/* Book Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {[...books.slice(0, 1), ...books].map((book, index) => (
+          {books.slice(0, 2).map((book, index) => (
             <motion.div
               key={book.id}
               className="group cursor-pointer relative"
@@ -149,8 +158,10 @@ export default function FavouritesSection() {
 
                   {/* Title */}
                   <h3 className="text-xl font-bold font-display text-gray-900 mb-2 group-hover:text-[#5A7F4D] transition-colors">
-                    {(index === 0 || index === 1) && book.title === "Father&Child w Cover" 
+                    {book.title.includes('Father&Child')
                       ? "Your Daddy loves you" 
+                      : book.title.includes('Grandma')
+                      ? "Grandma loves you"
                       : book.title}
                   </h3>
 
@@ -164,24 +175,12 @@ export default function FavouritesSection() {
                     <div className="text-2xl md:text-3xl font-bold text-gray-900">
                       ${formatPrice(book.price_cents)}
                     </div>
-                    {index === 1 ? (
-                      <button
-                        onClick={() => {
-                          setSelectedBook(book)
-                          setIsPaymentModalOpen(true)
-                        }}
-                        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
-                      >
-                        Buy Now
-                      </button>
-                    ) : (
-                      <Link 
-                        href={`/books/${book.publication_code}`}
-                        className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
-                      >
-                        Create Here
-                      </Link>
-                    )}
+                    <Link 
+                      href={`/books/${book.publication_code}`}
+                      className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
+                    >
+                      Create Here
+                    </Link>
                   </div>
                 </div>
               </div>

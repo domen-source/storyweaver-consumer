@@ -19,7 +19,7 @@ export default function BookPage() {
   // Upload states
   const [uploadedPhotos, setUploadedPhotos] = useState<Record<string, { file: File; url: string; uploaded: boolean }>>({})
   const [uploading, setUploading] = useState<string | null>(null)
-  const [loadingState, setLoadingState] = useState<{ show: boolean; message: string; subtext?: string } | null>(null)
+  const [loadingState, setLoadingState] = useState<{ show: boolean; message: string; subtext?: string; variant?: 'characters' | 'preview' } | null>(null)
   
   // Character names state
   const [characterNames, setCharacterNames] = useState<Record<string, string>>({})
@@ -211,8 +211,8 @@ export default function BookPage() {
     try {
       setLoadingState({ 
         show: true, 
-        message: 'Creating the pages of your book...', 
-        subtext: "We're putting your characters in a book so you'll see how it would look ❤️. This process may take about 30 seconds, hang on tight!"
+        message: 'Creating the pages of your book...',
+        variant: 'preview'
       })
       await generatePreview(order.id)
 
@@ -249,7 +249,7 @@ export default function BookPage() {
 
   return (
     <>
-      {loadingState?.show && <LoadingAnimation message={loadingState.message} subtext={loadingState.subtext} />}
+      {loadingState?.show && <LoadingAnimation message={loadingState.message} subtext={loadingState.subtext} variant={loadingState.variant} />}
       
       <div className="min-h-screen bg-gradient-to-b from-pastel-blue to-white">
         <div className="max-w-7xl mx-auto px-4 py-8">

@@ -6,22 +6,34 @@ interface LoadingAnimationProps {
   message?: string
   subtext?: string
   progress?: number
+  variant?: 'characters' | 'preview'
 }
 
-export default function LoadingAnimation({ message, subtext, progress }: LoadingAnimationProps) {
-  const rotatingSteps = [
+export default function LoadingAnimation({ message, subtext, progress, variant = 'characters' }: LoadingAnimationProps) {
+  const characterSteps = [
     "Turning photos into illustrated characters",
     "Shaping smiles, eyes, and expressions",
     "Adding warmth and personality",
     "Bringing your characters to life"
   ]
 
+  const previewSteps = [
+    "Placing your characters into the story 👩‍👧",
+    "Creating the first pages of your book 📖",
+    "Bringing the pages to life 🌟",
+    "Personalized preview is almost ready ❤️"
+  ]
+
+  const rotatingSteps = variant === 'preview' ? previewSteps : characterSteps
+
   const [stepIndex, setStepIndex] = useState(0)
 
   useEffect(() => {
+    setStepIndex(0) // Reset when variant changes
+    
     const stepInterval = setInterval(() => {
       setStepIndex(prev => {
-        // Stop at the last step (Step 4)
+        // Stop at the last step
         if (prev >= rotatingSteps.length - 1) {
           return prev
         }
@@ -32,7 +44,7 @@ export default function LoadingAnimation({ message, subtext, progress }: Loading
     return () => {
       clearInterval(stepInterval)
     }
-  }, [])
+  }, [variant, rotatingSteps.length])
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -71,7 +83,10 @@ export default function LoadingAnimation({ message, subtext, progress }: Loading
 
         {progress === undefined && (
           <p className="text-sm text-gray-500 mt-2">
-            {subtext || 'This may take about 30 seconds ✨'}
+            {variant === 'preview' 
+              ? 'This process takes about 30 seconds, hang on tight! ❤️'
+              : (subtext || 'This may take about 30 seconds ✨')
+            }
           </p>
         )}
       </div>

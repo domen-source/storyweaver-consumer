@@ -224,14 +224,14 @@ export default function PreviewPage() {
             <div className="max-w-4xl mx-auto mt-8">
               <div className="bg-white rounded-lg shadow-xl p-8 text-center">
                 <h2 className="text-2xl font-bold text-dark-blue mb-4">
-                  Ready to bring this story to life?
+                  This story is already theirs💛
                 </h2>
-                <p className="text-gray-600 mb-6">
-                  Get a complete personalized book with all 26 pages beautifully printed and sent to you.
+                <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+                  The full story includes all 26 beautifully illustrated pages, capturing playful moments, quiet routines, and loving connections they'll want to return to again and again.
                 </p>
                 {isProcessingPayment ? (
                   <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                    <div className="w-12 h-12 border-4 border-[#B5C9A8] border-t-[#6B8F5E] rounded-full animate-spin"></div>
                     <p className="text-gray-600">Redirecting to secure checkout...</p>
                   </div>
                 ) : (
@@ -239,16 +239,21 @@ export default function PreviewPage() {
                     onClick={handleStripeCheckout}
                     className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white font-bold py-4 px-12 rounded-lg text-xl transition-colors"
                   >
-                    Order Your Book - $44.99
+                    Get the Complete Personalized Book
                   </button>
                 )}
-                <div className="flex items-center justify-center gap-2 mt-4">
+                <div className="flex items-center justify-center gap-2 mt-4 mb-6">
                   <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
                   <p className="text-xs text-gray-500">
                     Secure payment powered by Stripe
                   </p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+                  <span>★ Printed & bound in the USA</span>
+                  <span>★ Made uniquely for your family</span>
+                  <span>★ Loved by parents & kids</span>
                 </div>
               </div>
             </div>
