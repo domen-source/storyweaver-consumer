@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins, Quicksand } from 'next/font/google'
 import './globals.css'
+import Footer from '@/components/Footer'
 
 const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
@@ -26,7 +27,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} ${quicksand.variable} font-sans`}>{children}</body>
+      <body className={`${poppins.variable} ${quicksand.variable} font-sans`}>
+        {children}
+        <Footer />
+      </body>
     </html>
   )
 }

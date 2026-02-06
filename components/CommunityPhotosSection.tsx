@@ -9,13 +9,11 @@ const communityPhotos = [
   { id: 4, placeholder: '[PLACEHOLDER - COMMUNITY PHOTO 4]' },
   { id: 5, placeholder: '[PLACEHOLDER - COMMUNITY PHOTO 5]' },
   { id: 6, placeholder: '[PLACEHOLDER - COMMUNITY PHOTO 6]' },
-  { id: 7, placeholder: '[PLACEHOLDER - COMMUNITY PHOTO 7]' },
-  { id: 8, placeholder: '[PLACEHOLDER - COMMUNITY PHOTO 8]' },
 ]
 
 export default function CommunityPhotosSection() {
   return (
-    <section className="py-20 bg-white">
+    <section className="pt-10 pb-20 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold font-display text-center mb-4 text-gray-900">
           Photos from Our Community

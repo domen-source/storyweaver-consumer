@@ -322,7 +322,7 @@ export default function BookPage() {
                 <p className="text-gray-700 mb-4">{book.description}</p>
                 <div className="space-y-1 text-sm text-gray-600">
                   <p>• Appropriate for all ages</p>
-                  <p>• 15 Pages</p>
+                  <p>• 26 Pages</p>
                   <p>• Hard Binding</p>
                   <p>• Format: 12 in. x 12 in. square</p>
                 </div>

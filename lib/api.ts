@@ -24,6 +24,7 @@ export interface Book {
   id: string  // UUID from backend
   publication_code: string
   title: string
+  display_name?: string
   subtitle: string
   description: string
   price_cents: number  // Price in cents (e.g., 3999 = $39.99)
@@ -95,7 +96,7 @@ export interface OrderPage {
 
 // Fetch all books
 export async function fetchBooks(): Promise<Book[]> {
-  const response = await fetch(`${API_URL}/api/public/books`)
+  const response = await fetch(`${API_URL}/api/public/books`, { cache: 'no-store' })
   if (!response.ok) {
     const errorText = await response.text()
     throw new Error(`Failed to fetch books: ${response.status} ${errorText}`)
@@ -111,7 +112,7 @@ export async function fetchBook(publicationCode: string): Promise<Book> {
   console.log('[fetchBook] API URL:', API_URL)
   console.log('[fetchBook] Full URL:', `${API_URL}/api/public/books/${publicationCode}`)
   
-  const response = await fetch(`${API_URL}/api/public/books/${publicationCode}`)
+  const response = await fetch(`${API_URL}/api/public/books/${publicationCode}`, { cache: 'no-store' })
   console.log('[fetchBook] Response status:', response.status, response.statusText)
   
   if (!response.ok) {

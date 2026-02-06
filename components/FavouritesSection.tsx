@@ -13,6 +13,7 @@ export default function FavouritesSection() {
   const [error, setError] = useState<string | null>(null)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const [selectedBook, setSelectedBook] = useState<Book | null>(null)
+  const [expandedBooks, setExpandedBooks] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     loadBooks()
@@ -113,19 +114,37 @@ export default function FavouritesSection() {
               viewport={{ once: true }}
             >
               <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden">
-                {/* Bestseller Badge - show for first book */}
-                {index === 0 && (
-                  <div className="absolute top-4 left-4 z-10">
-                  <div className="bg-[#6B8F5E] text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                      ⭐ #1 Book in the USA ⭐
-                    </div>
-                  </div>
-                )}
-
                 {/* Book Cover */}
-                <div className="aspect-[3/4] overflow-hidden bg-gradient-to-br from-pastel-blue to-pastel-pink">
+                <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-pastel-blue to-pastel-pink">
+                  {/* Badges */}
+                  {index === 0 && (
+                    <>
+                      <div className="absolute top-4 left-4 z-10">
+                        <div className="bg-[#6B8F5E] text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-md">
+                          ⭐ #1 Book in the USA ⭐
+                        </div>
+                      </div>
+                      <motion.div 
+                        className="absolute bottom-24 right-2 z-10"
+                        animate={{ y: [0, -8, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <div className="bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-base font-bold shadow-lg border-2 border-white">
+                          BEST
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                  {index === 1 && (
+                    <div className="absolute top-4 left-4 z-10">
+                      <div className="bg-[#6B8F5E] text-white px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-md">
+                        ⭐ Perfect Gift for Grandparents ⭐
+                      </div>
+                    </div>
+                  )}
+                  
                   <Image 
-                    src={book.preview_image_url} 
+                    src={book.preview_image_url}
                     alt={book.title}
                     width={400}
                     height={533}
@@ -134,7 +153,7 @@ export default function FavouritesSection() {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="px-6 pb-6 pt-3">
                   {/* Star Rating */}
                   <div className="flex items-center gap-1 mb-2">
                     {[...Array(5)].map((_, i) => (
@@ -143,28 +162,39 @@ export default function FavouritesSection() {
                       </svg>
                     ))}
                     <span className="text-sm text-gray-600 ml-2">
-                      {100 + index * 47} reviews
+                      {index === 0 ? 371 : 100 + index * 47} reviews
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-xl font-bold font-display text-gray-900 mb-2 group-hover:text-[#5A7F4D] transition-colors">
-                    {book.title}
+                  <h3 className="text-xl font-bold font-display text-gray-900 mb-2 transition-colors">
+                    {book.display_name || book.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {book.description}
-                  </p>
+                  <div className="mb-4">
+                    <p className={`text-gray-600 text-sm ${expandedBooks[book.id] ? '' : 'line-clamp-2'}`}>
+                      {book.description}
+                    </p>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setExpandedBooks(prev => ({ ...prev, [book.id]: !prev[book.id] }))
+                      }}
+                      className="text-[#6B8F5E] text-xs font-semibold mt-1 hover:underline focus:outline-none"
+                    >
+                      {expandedBooks[book.id] ? 'less' : 'more'}
+                    </button>
+                  </div>
 
                   {/* Price & CTA */}
                   <div className="flex items-center justify-between">
-                    <div className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <div className="text-3xl md:text-4xl font-medium text-gray-600">
                       ${formatPrice(book.price_cents)}
                     </div>
                     <Link 
                       href={`/books/${book.publication_code}`}
-                      className="bg-[#6B8F5E] hover:bg-[#5A7F4D] text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
+                      className="bg-white border-2 border-[#6B8F5E] text-[#6B8F5E] hover:bg-[#F0F4E8] px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
                     >
                       Create Here
                     </Link>
