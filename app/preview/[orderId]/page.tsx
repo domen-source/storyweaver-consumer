@@ -227,7 +227,7 @@ export default function PreviewPage() {
                   This story is already theirs💛
                 </h2>
                 <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                  The full story includes all 26 beautifully illustrated pages, capturing playful moments, quiet routines, and loving connections they'll want to return to again and again.
+                  The full story includes all <strong>26 beautifully illustrated pages</strong>, capturing playful moments, quiet routines, and loving connections they'll want to return to again and again.
                 </p>
                 {isProcessingPayment ? (
                   <div className="flex flex-col items-center gap-3">
@@ -250,7 +250,7 @@ export default function PreviewPage() {
                     Secure payment powered by Stripe
                   </p>
                 </div>
-                <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+                <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-600">
                   <span>★ Printed & bound in the USA</span>
                   <span>★ Made uniquely for your family</span>
                   <span>★ Loved by parents & kids</span>

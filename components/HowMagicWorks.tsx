@@ -65,9 +65,7 @@ export default function HowMagicWorks() {
                     className="w-full h-full object-cover"
                   />
                 </motion.div>
-                <div className={`absolute -top-2 -right-2 ${step.badgeColor} text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-md`}>
-                  {step.number}
-                </div>
+                {/* Number badge removed */}
               </div>
               <h3 className="text-xl md:text-2xl font-bold font-display mb-3 text-gray-900">{step.title}</h3>
               <p className="text-gray-600">

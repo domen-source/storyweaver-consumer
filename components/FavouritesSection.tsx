@@ -189,12 +189,12 @@ export default function FavouritesSection() {
 
                   {/* Price & CTA */}
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl md:text-4xl font-medium text-gray-600">
+                    <div className="text-2xl md:text-3xl font-medium text-gray-600">
                       ${formatPrice(book.price_cents)}
                     </div>
                     <Link 
                       href={`/books/${book.publication_code}`}
-                      className="bg-white border-2 border-[#6B8F5E] text-[#6B8F5E] hover:bg-[#F0F4E8] px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-sm"
+                      className="bg-white border-2 border-[#6B8F5E] text-[#6B8F5E] hover:bg-[#F0F4E8] px-8 py-2 rounded-full font-semibold hover:shadow-lg transition-all text-base"
                     >
                       Create Here
                     </Link>

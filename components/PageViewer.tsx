@@ -11,6 +11,7 @@ interface PageViewerProps {
 
 export default function PageViewer({ pages, isPreview = false }: PageViewerProps) {
   const [currentPage, setCurrentPage] = useState(0)
+  const [isEnlarged, setIsEnlarged] = useState(false)
 
   const handlePrev = () => {
     if (currentPage > 0) setCurrentPage(currentPage - 1)
@@ -51,7 +52,8 @@ export default function PageViewer({ pages, isPreview = false }: PageViewerProps
             <img
               src={page.imageUrl}
               alt={`Page ${page.pageNumber + 1}`}
-              className={`w-full h-full object-cover ${!unlocked ? 'blur-md' : ''}`}
+              className={`w-full h-full object-cover ${!unlocked ? 'blur-md' : 'cursor-zoom-in'}`}
+              onClick={() => unlocked && setIsEnlarged(true)}
             />
           ) : (
             <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
@@ -182,6 +184,26 @@ export default function PageViewer({ pages, isPreview = false }: PageViewerProps
           </svg>
           Download All Pages
         </button>
+      )}
+
+      {/* Enlarged Image Modal */}
+      {isEnlarged && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setIsEnlarged(false)}>
+          <button 
+            className="absolute top-4 right-4 text-white hover:text-gray-300 p-2 bg-black/50 rounded-full"
+            onClick={() => setIsEnlarged(false)}
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src={page.imageUrl}
+            alt={`Page ${page.pageNumber + 1}`}
+            className="max-w-full max-h-full object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
       )}
     </div>
   )

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
+export const runtime = 'nodejs'
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia',
 })
@@ -16,9 +18,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create Stripe checkout session for preview/full book purchase
+    const origin = request.headers.get('origin') || 'http://localhost:3000'
+
     const session = await stripe.checkout.sessions.create({
+      // ✅ Little Booky branding (new logo)
+      branding_settings: {
+        display_name: 'Little Booky',
+        logo: {
+          type: 'url',
+          url: 'https://i.ibb.co/qMzpFQcL/Little-Booky-By-BB-logo-black.png',
+        },
+      },
+
       payment_method_types: ['card'],
+
       line_items: [
         {
           price_data: {
@@ -32,22 +45,29 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
+
       mode: 'payment',
-      success_url: `${request.headers.get('origin')}/payment/success?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
-      cancel_url: `${request.headers.get('origin')}/preview/${orderId}`,
+
+      success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
+      cancel_url: `${origin}/preview/${orderId}`,
+
       metadata: {
         orderId,
         bookCode: bookCode || '',
-        flow: 'preview', // Identifies this as the preview purchase flow
+        flow: 'preview',
       },
     })
 
-    return NextResponse.json({ sessionId: session.id, url: session.url })
+    return NextResponse.json({
+      sessionId: session.id,
+      url: session.url,
+    })
   } catch (err) {
-    console.error('Error creating preview checkout session:', err)
+    console.error('❌ Error creating preview checkout session:', err)
     return NextResponse.json(
-      { error: 'Error creating checkout session' },
+      { error: 'Error creating preview checkout session' },
       { status: 500 }
     )
   }
 }
+

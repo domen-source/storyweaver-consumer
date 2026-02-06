@@ -65,7 +65,7 @@ export default function HeroSection() {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Book covers - 3 books floating/tilted */}
-        <div className="flex justify-center items-center mb-0 relative h-96 md:h-[500px] overflow-visible">
+        <div className="flex justify-center items-center -mb-12 md:-mb-24 relative h-96 md:h-[500px] overflow-visible">
           {/* Book 1 - Center main book */}
           <motion.div 
             className="relative z-20"
@@ -74,7 +74,7 @@ export default function HeroSection() {
           >
             <div className="w-full md:w-[600px] h-auto">
               <img 
-                src="/uploads/photos/Books_Website.png" 
+                src="/uploads/photos/Books_Website.gif" 
                 alt="Book Cover" 
                 className="w-full h-auto object-contain"
               />
@@ -85,7 +85,7 @@ export default function HeroSection() {
         {/* Headline */}
         <div className="text-center">
           <motion.h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-bold font-display text-gray-900 mb-4"
+            className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-900 mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}

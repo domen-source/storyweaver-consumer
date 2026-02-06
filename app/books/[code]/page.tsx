@@ -268,7 +268,7 @@ export default function BookPage() {
               {/* Hero Image - Large Book Cover */}
               <div className="relative mb-6 bg-white rounded-lg shadow-lg overflow-hidden">
                 <img
-                  src={selectedImageUrl || book.preview_image_url}
+                  src={selectedImageUrl || (book.title.match(/(Father|Dad|Daddy)/i) ? '/uploads/photos/Book_Preview-DaddyLovesYou_02.png' : (book.title.match(/(Grandma|Grandparent)/i) ? '/uploads/photos/Book_Preview-Grandma.png' : book.preview_image_url))}
                   alt={book.title}
                   className="w-full h-auto object-contain rounded-lg"
                   style={{ maxHeight: '400px' }}
@@ -283,7 +283,8 @@ export default function BookPage() {
               {/* Detail Images Carousel */}
               {(() => {
                 // Combine cover image with detail images, avoiding duplicates
-                const allImages = [book.preview_image_url, ...(book.detail_images || [])].filter(
+                const coverImage = book.title.match(/(Father|Dad|Daddy)/i) ? '/uploads/photos/Book_Preview-DaddyLovesYou_02.png' : (book.title.match(/(Grandma|Grandparent)/i) ? '/uploads/photos/Book_Preview-Grandma.png' : book.preview_image_url)
+                const allImages = [coverImage, ...(book.detail_images || [])].filter(
                   (img, index, arr) => img && arr.indexOf(img) === index
                 )
                 if (allImages.length === 0) return null
@@ -326,18 +327,17 @@ export default function BookPage() {
                   <p>• Hard Binding</p>
                   <p>• Format: 12 in. x 12 in. square</p>
                 </div>
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <p className="text-2xl font-semibold text-gray-600">
+                    Price: ${formatPrice(book.price_cents)}
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Right Column - Upload Form */}
             <div>
               <div className="bg-white rounded-lg p-8 shadow-lg sticky top-8">
-                <div className="mb-6">
-                  <p className="text-3xl font-bold text-blue-600">
-                    Price: ${formatPrice(book.price_cents)}
-                  </p>
-                </div>
-
                 <h2 className="text-2xl font-bold text-dark-blue mb-6">Personalize Your Book</h2>
 
                 {/* Avatar Approval Screen */}

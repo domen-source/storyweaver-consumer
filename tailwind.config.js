@@ -18,6 +18,7 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-poppins)', 'sans-serif'],
         display: ['var(--font-quicksand)', 'sans-serif'],
+        handwriting: ['var(--font-damion)', 'cursive'],
       },
       keyframes: {
         float: {
